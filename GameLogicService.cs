@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-class GameLogicService : IGameLogicService
+﻿class GameLogicService : IGameLogicService
 {
     Player player1 = new Player(PlayMode.Diagonal);
     Player player2 = new Player(PlayMode.Random);
@@ -28,7 +25,7 @@ class GameLogicService : IGameLogicService
 
             result = player1.GetHit(player2.MakeAMove());
             player2.GetResult(result);
-            if (result == Result.GameOver) {  break; }
+            if (result == Result.GameOver) { break; }
             toRet.GameHistory.Add(MakeSnapshot());
         }
         toRet.GameHistory.Add(MakeSnapshot());

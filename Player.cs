@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
 
 public enum PlayMode
 {
@@ -400,7 +399,7 @@ public class Player
                     possibleDirections.Remove(lastDirection);
                     break;
                 case CurrentBehaviour.Up:
-                    if (MakeAMoveHelper(CurrentBehaviour.Down,CurrentBehaviour.Right)) lastMove = firstHit;
+                    if (MakeAMoveHelper(CurrentBehaviour.Down, CurrentBehaviour.Right)) lastMove = firstHit;
                     break;
                 case CurrentBehaviour.Down:
                     if (MakeAMoveHelper(CurrentBehaviour.Up, CurrentBehaviour.Left)) lastMove = firstHit;
