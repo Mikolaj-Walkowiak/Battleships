@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-public enum PlayMode : int
+using System.Text;
+using System.Text.Json.Serialization;
+
+public enum PlayMode
 {
-    Random = 0,
-    Diagonal = 1 // apparently going in a diagonal line when firing
-                 // is +ev for the battleship game
+    Random,
+    Diagonal // apparently going in a diagonal line when firing
+             // is +ev for the battleship game
 }
 enum CurrentBehaviour : int
 {
@@ -15,21 +18,20 @@ enum CurrentBehaviour : int
     Down = 4,
     Left = 5
 }
-public enum Result : int
+public enum Result
 {
-    Miss = 0,
-    Hit = 1,
-    Kill = 2,
-    GameOver = 3
+    Miss,
+    Hit,
+    Kill,
+    GameOver
 }
-enum PointType : int
+public enum PointType
 {
-    Empty = 0,
-    KilledShip = 1,
-    DamagedShip = 2,
-    Ship = 3,
-    Unknown = 4,
-    Forbidden = 5
+    Empty,
+    KilledShip,
+    DamagedShip,
+    Ship,
+    Unknown
 }
 enum Direction : int
 {
@@ -44,18 +46,15 @@ enum Direction : int
 public class Player
 {
     Random random = new Random();
-
     PlayMode playMode;
     CurrentBehaviour currentBehaviour;
     PointType[,] playerBoard = new PointType[10, 10];
     PointType[,] enemyBoard = new PointType[10, 10];
     Direction lastDirection;
-
-    int currentX, currentY, changeX, changeY;
+    int currentX, currentY, changeX, changeY; //used to traverse the gameBoard in a diagonal fashion
     Tuple<int, int> lastMove, firstHit = new(0, 0);
     List<Direction> possibleDirections = new();
     List<int> shipsToPlace = new List<int>() { 2, 3, 3, 4, 5 };
-
     /*HASBRO FIX*/
     bool isDeadlocked = false;
     bool hasbroFixRequired = false;
@@ -171,8 +170,7 @@ public class Player
     }
     private void CreateBoard()
     {
-        int shipToPlace, shipX, shipY;
-        Direction shipDirection;
+        int shipToPlace;
         Tuple<int, int> startingPoint = new(0, 0);
         List<Tuple<int, int>> possibleMoves = new List<Tuple<int, int>>();
         /*Player board*/
@@ -207,7 +205,7 @@ public class Player
             {
                 for (int j = 0; j < playerBoard.GetLength(1); ++j)
                 {
-                    if (playerBoard[i, j] == PointType.DamagedShip) playerBoard[i, j] = PointType.KilledShip; // can be done due to the bot's behaviour
+                    if (playerBoard[i, j] == PointType.DamagedShip) playerBoard[i, j] = PointType.KilledShip;
                 }
             }
         }
@@ -229,10 +227,18 @@ public class Player
             }
         }
     }
-
+    private bool MakeAMoveHelper(CurrentBehaviour standard, CurrentBehaviour deadlocked)
+    {
+        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = deadlocked; lastMove = firstHit = possibleFakeShips[0]; return false; }
+        else
+        {
+            isDeadlocked = true;
+            currentBehaviour = standard;
+            return true;
+        }
+    }
     public Tuple<int, int> MakeAMove()
     {
-
         if (currentBehaviour == CurrentBehaviour.Searching)
         {
             List<Tuple<int, int>> possibleMoves = new List<Tuple<int, int>>(); //maybe Point?
@@ -269,44 +275,37 @@ public class Player
                         else
                         {
                             playMode = PlayMode.Random;
-                            for (int x = 0; x < 10; ++x)
-                            {
-                                for (int y = 0; y < 10; ++y)
-                                {
-                                    if (enemyBoard[x, y] == PointType.Unknown)
-                                    {
-                                        possibleMoves.Add(Tuple.Create(x, y));
-                                    }
-                                }
-                            }
-                            lastMove = possibleMoves[random.Next(possibleMoves.Count)];
-                            currentX = lastMove.Item1;
-                            currentY = lastMove.Item2;
-                            break;
+                            return MakeAMove();
                         }
                     }
                 }
                 lastMove = Tuple.Create(currentX, currentY);
             }
         }
-
         else if (currentBehaviour == CurrentBehaviour.Found)
         {
-            lastDirection = possibleDirections[random.Next(possibleDirections.Count)];
-            switch (lastDirection)
+            if (possibleDirections.Count == 0)
             {
-                case Direction.Left:
-                    lastMove = Tuple.Create(currentX - 1, currentY);
-                    break;
-                case Direction.Right:
-                    lastMove = Tuple.Create(currentX + 1, currentY);
-                    break;
-                case Direction.Up:
-                    lastMove = Tuple.Create(currentX, currentY - 1);
-                    break;
-                case Direction.Down:
-                    lastMove = Tuple.Create(currentX, currentY + 1);
-                    break;
+                currentBehaviour = CurrentBehaviour.Searching;
+            }
+            else
+            {
+                lastDirection = possibleDirections[random.Next(possibleDirections.Count)];
+                switch (lastDirection)
+                {
+                    case Direction.Left:
+                        lastMove = Tuple.Create(currentX - 1, currentY);
+                        break;
+                    case Direction.Right:
+                        lastMove = Tuple.Create(currentX + 1, currentY);
+                        break;
+                    case Direction.Up:
+                        lastMove = Tuple.Create(currentX, currentY - 1);
+                        break;
+                    case Direction.Down:
+                        lastMove = Tuple.Create(currentX, currentY + 1);
+                        break;
+                }
             }
         }
         else
@@ -315,13 +314,10 @@ public class Player
             {
                 case CurrentBehaviour.Left:
                     lastMove = Tuple.Create(lastMove.Item1 - 1, lastMove.Item2);
-                    if (lastMove.Item1 < 0 )
+                    if (lastMove.Item1 < 0)
                     {
-                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Down; lastMove = firstHit = possibleFakeShips[0]; }
-                        else
+                        if (MakeAMoveHelper(CurrentBehaviour.Right, CurrentBehaviour.Down))
                         {
-                            isDeadlocked = true;
-                            lastDirection = Direction.Right;
                             lastMove = Tuple.Create(firstHit.Item1 + 1, firstHit.Item2);
                         }
                     }
@@ -330,11 +326,8 @@ public class Player
                     lastMove = Tuple.Create(lastMove.Item1 + 1, lastMove.Item2);
                     if (lastMove.Item1 > 9)
                     {
-                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Down; lastMove = firstHit = possibleFakeShips[0]; }
-                        else
+                        if (MakeAMoveHelper(CurrentBehaviour.Left, CurrentBehaviour.Up))
                         {
-                            isDeadlocked = true;
-                            lastDirection = Direction.Left;
                             lastMove = Tuple.Create(firstHit.Item1 - 1, firstHit.Item2);
                         }
                     }
@@ -343,11 +336,8 @@ public class Player
                     lastMove = Tuple.Create(lastMove.Item1, lastMove.Item2 - 1);
                     if (lastMove.Item2 < 0)
                     {
-                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
-                        else
+                        if (MakeAMoveHelper(CurrentBehaviour.Down, CurrentBehaviour.Right))
                         {
-                            isDeadlocked = true;
-                            lastDirection = Direction.Down;
                             lastMove = Tuple.Create(firstHit.Item1, firstHit.Item2 + 1);
                         }
                     }
@@ -356,11 +346,8 @@ public class Player
                     lastMove = Tuple.Create(lastMove.Item1, lastMove.Item2 + 1);
                     if (lastMove.Item2 > 9)
                     {
-                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
-                        else
+                        if (MakeAMoveHelper(CurrentBehaviour.Up, CurrentBehaviour.Left))
                         {
-                            isDeadlocked = true;
-                            lastDirection = Direction.Up;
                             lastMove = Tuple.Create(firstHit.Item1, firstHit.Item2 - 1);
                         }
                     }
@@ -370,7 +357,6 @@ public class Player
         }
         return lastMove;
     }
-
     private Result CheckKill(Tuple<int, int> pos)
     {
         bool isKilled, isGameOver;
@@ -403,7 +389,6 @@ public class Player
         if (playerBoard[pos.Item1, pos.Item2] == PointType.KilledShip) return Result.Miss;
         else return CheckKill(pos);
     }
-
     public void GetResult(Result result)
     {
         if (result == Result.Miss)
@@ -415,40 +400,16 @@ public class Player
                     possibleDirections.Remove(lastDirection);
                     break;
                 case CurrentBehaviour.Up:
-                    if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
-                    else
-                    {
-                        isDeadlocked = true;
-                        currentBehaviour = CurrentBehaviour.Down;
-                        lastMove = firstHit;
-                    }
+                    if (MakeAMoveHelper(CurrentBehaviour.Down,CurrentBehaviour.Right)) lastMove = firstHit;
                     break;
                 case CurrentBehaviour.Down:
-                    if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
-                    else
-                    {
-                        isDeadlocked = true;
-                        currentBehaviour = CurrentBehaviour.Up;
-                        lastMove = firstHit;
-                    }
+                    if (MakeAMoveHelper(CurrentBehaviour.Up, CurrentBehaviour.Left)) lastMove = firstHit;
                     break;
                 case CurrentBehaviour.Left:
-                    if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Down; lastMove = firstHit = possibleFakeShips[0]; }
-                    else
-                    {
-                        isDeadlocked = true;
-                        currentBehaviour = CurrentBehaviour.Right;
-                        lastMove = firstHit;
-                    }
+                    if (MakeAMoveHelper(CurrentBehaviour.Right, CurrentBehaviour.Down)) lastMove = firstHit;
                     break;
                 case CurrentBehaviour.Right:
-                    if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Down; lastMove = firstHit = possibleFakeShips[0]; }
-                    else
-                    {
-                        isDeadlocked = true;
-                        currentBehaviour = CurrentBehaviour.Left;
-                        lastMove = firstHit;
-                    }
+                    if (MakeAMoveHelper(CurrentBehaviour.Left, CurrentBehaviour.Up)) lastMove = firstHit;
                     break;
             }
         }
@@ -461,7 +422,7 @@ public class Player
             {
                 firstHit = Tuple.Create(lastMove.Item1, lastMove.Item2);
                 possibleDirections.Clear();
-                if (lastMove.Item1 > 1 && enemyBoard[lastMove.Item1-1,lastMove.Item2] == PointType.Unknown) possibleDirections.Add(Direction.Left);
+                if (lastMove.Item1 > 1 && enemyBoard[lastMove.Item1 - 1, lastMove.Item2] == PointType.Unknown) possibleDirections.Add(Direction.Left);
                 if (lastMove.Item1 < 9 && enemyBoard[lastMove.Item1 + 1, lastMove.Item2] == PointType.Unknown) possibleDirections.Add(Direction.Right);
                 if (lastMove.Item2 > 1 && enemyBoard[lastMove.Item1, lastMove.Item2 - 1] == PointType.Unknown) possibleDirections.Add(Direction.Up);
                 if (lastMove.Item2 < 9 && enemyBoard[lastMove.Item1, lastMove.Item2 + 1] == PointType.Unknown) possibleDirections.Add(Direction.Down);
@@ -500,60 +461,57 @@ public class Player
                 possibleFakeShips.Clear();
                 currentBehaviour = CurrentBehaviour.Searching;
             }
-
         }
     }
-    public void DrawMap()
+    public List<String> ReturnState()
     {
-        Console.WriteLine("\n\nPlayer: {0}", playMode);
-        for (int i = 0; i < playerBoard.GetLength(0); ++i)
+        StringBuilder sb = new StringBuilder("", 100);
+        foreach (PointType el in playerBoard)
         {
-            Console.Write('\n');
-            for (int j = 0; j < playerBoard.GetLength(1); ++j)
+            switch (el)
             {
-                switch (playerBoard[j, i])
-                {
-                    case PointType.Empty:
-                        Console.Write(".");
-                        break;
-                    case PointType.Ship:
-                        Console.Write("O");
-                        break;
-                    case PointType.KilledShip:
-                        Console.Write("X");
-                        break;
-                    case PointType.DamagedShip:
-                        Console.Write("U");
-                        break;
-                }
+                case PointType.Empty:
+                    sb.Append('0');
+                    break;
+                case PointType.Ship:
+                    sb.Append('1');
+                    break;
+                case PointType.KilledShip:
+                    sb.Append('2');
+                    break;
+                case PointType.DamagedShip:
+                    sb.Append('3');
+                    break;
             }
         }
-        Console.WriteLine("\n=============");
-        for (int i = 0; i < enemyBoard.GetLength(0); ++i)
+        String myBoard = sb.ToString();
+        sb.Clear();
+        foreach (PointType el in enemyBoard)
         {
-            Console.Write('\n');
-            for (int j = 0; j < enemyBoard.GetLength(1); ++j)
+            switch (el)
             {
-                switch (enemyBoard[j, i])
-                {
-                    case PointType.Empty:
-                        Console.Write("E");
-                        break;
-                    case PointType.Ship:
-                        Console.Write("O");
-                        break;
-                    case PointType.KilledShip:
-                        Console.Write("X");
-                        break;
-                    case PointType.DamagedShip:
-                        Console.Write("U");
-                        break;
-                    case PointType.Unknown:
-                        Console.Write(".");
-                        break;
-                }
+                case PointType.Unknown:
+                    sb.Append('0');
+                    break;
+                case PointType.Ship:
+                    sb.Append('1');
+                    break;
+                case PointType.KilledShip:
+                    sb.Append('2');
+                    break;
+                case PointType.DamagedShip:
+                    sb.Append('3');
+                    break;
+                case PointType.Empty:
+                    sb.Append('4');
+                    break;
             }
         }
+        String enBoard = sb.ToString();
+        List<String> toRet = new();
+        toRet.Add(myBoard);
+        toRet.Add(enBoard);
+        return toRet;
     }
     public Player(PlayMode playMode)
     {

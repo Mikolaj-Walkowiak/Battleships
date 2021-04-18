@@ -1,8 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "DLNt+R5lM6jJqCjW/hGSSQ2VGxoF5446ifAW5M14JLCRjwBQqYLm0MRGCNPBm/fPwLS3DvLYtU7I/OeO28ZhCg==",
+  "dgSpecHash": "i0ZfqhdGP4IF6JminQ1sZQil+qLkFJ0g4Lb/2Qlnq7dH3fCtYYOjeV07h0P6PjNmt78CIA4Fs22N/8eLe+6caQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\mwalk\\source\\repos\\Battleships\\Battleships\\Battleships.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\mwalk\\source\\repos\\Project3\\Project3\\BattleshipGame.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mwalk\\.nuget\\packages\\microsoft.aspnetcore.spaservices.extensions\\5.0.4\\microsoft.aspnetcore.spaservices.extensions.5.0.4.nupkg.sha512",
+    "C:\\Users\\mwalk\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\5.0.0\\microsoft.extensions.fileproviders.abstractions.5.0.0.nupkg.sha512",
+    "C:\\Users\\mwalk\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\5.0.0\\microsoft.extensions.fileproviders.physical.5.0.0.nupkg.sha512",
+    "C:\\Users\\mwalk\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\5.0.0\\microsoft.extensions.filesystemglobbing.5.0.0.nupkg.sha512",
+    "C:\\Users\\mwalk\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.0\\microsoft.extensions.primitives.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

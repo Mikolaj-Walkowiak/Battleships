@@ -1,0 +1,13 @@
+<h1>BattleShipGame</h1>
+<p>This is a single-page application, built with:</p>
+<ul>
+  <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
+  <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
+  <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
+</ul>
+<p>After clicking the button below a game of battleship will be simulated between two bots. One of the bots plays 100% randomly, the other one begins its game by going diagonaly from top to bottom and back. You will be shown the final board state althought playtrouh history is currently being made possible to be vieved!</p>
+<p>As a sidenote, going back to homepage and clicking simulate is much faster than reload</p>
+
+<button class="nav-item" [routerLinkActive]="['link-active']">
+  <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Start Simulation</a>
+</button>

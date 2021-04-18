@@ -1,0 +1,129 @@
+<!--
+  <i class="bi bi-x"></i> miss
+  <i class="bi bi-x-circle"></i> hit
+  <i class="bi bi-x-circle-fill"></i> kill
+  <i class="bi bi-shield"></i> ship
+
+
+
+
+-->
+
+
+<h1 id="tableLabel">Battleship Game</h1>
+<p *ngIf="!gameState"><em>Loading...</em></p>
+<div><div align="left">DiagonalPlayer</div> <div align="right">RandomPlayer</div></div>
+<div><button (click)="back()" [disabled]="iterationCount == 0">Back</button><button align ="right" (click)="next()" [disabled]="iterationCount == gameState.length-1">Next</button></div>
+<div class="row">
+  <table class='table table-striped col-md-6 border border-dark' aria-labelledby="tableLabel" *ngIf="gameState">
+    <thead>
+      <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of DiagonalBoard; let i = index;">
+        <td>{{i}}</td>
+        <td *ngFor="let y of x;">
+          <i *ngIf="y==4" class="bi bi-x"></i> <!--miss-->
+          <i *ngIf="y==3" class="bi bi-x-circle"></i> <!--hit-->
+          <i *ngIf="y==2" class="bi bi-x-circle-fill"></i> <!--kill-->
+          <i *ngIf="y==1" class="bi bi-shield"></i> <!--ship-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class='table table-striped col-md-6 border border-dark' aria-labelledby="tableLabel" *ngIf="gameState">
+    <thead>
+      <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of RandomBoard; let i = index;">
+        <td>{{i}}</td>
+        <td *ngFor="let y of x;">
+          <i *ngIf="y==4" class="bi bi-x"></i> <!--miss-->
+          <i *ngIf="y==3" class="bi bi-x-circle"></i> <!--hit-->
+          <i *ngIf="y==2" class="bi bi-x-circle-fill"></i> <!--kill-->
+          <i *ngIf="y==1" class="bi bi-shield"></i> <!--ship-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <table class='table table-striped col-md-6 border border-dark' aria-labelledby="tableLabel" *ngIf="gameState">
+    <thead>
+      <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of DiagonalBoardEnemy; let i = index;">
+        <td>{{i}}</td>
+        <td *ngFor="let y of x;">
+          <i *ngIf="y==4" class="bi bi-x"></i> <!--miss-->
+          <i *ngIf="y==3" class="bi bi-x-circle"></i> <!--hit-->
+          <i *ngIf="y==2" class="bi bi-x-circle-fill"></i> <!--kill-->
+          <i *ngIf="y==1" class="bi bi-shield"></i> <!--ship-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class='table table-striped col-md-6 border border-dark' aria-labelledby="tableLabel" *ngIf="gameState">
+    <thead>
+      <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let x of RandomBoardEnemy; let i = index;">
+        <td>{{i}}</td>
+        <td *ngFor="let y of x;">
+          <i *ngIf="y==4" class="bi bi-x"></i> <!--miss-->
+          <i *ngIf="y==3" class="bi bi-x-circle"></i> <!--hit-->
+          <i *ngIf="y==2" class="bi bi-x-circle-fill"></i> <!--kill-->
+          <i *ngIf="y==1" class="bi bi-shield"></i> <!--ship-->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
