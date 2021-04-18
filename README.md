@@ -4,6 +4,11 @@ Battleships game with 2 bots playing with each other. Game logic is located in G
 # The task
 Based on the rules of the Battleship gameboard (https://en.wikipedia.org/wiki/Battleship_(game)) implement a program that randomly places ships on two boards and simulate the gameplay between 2 players.
 
+# Requirements
+- .Net 5.0
+- Angular 8.2
+- Bootstrap 4.6
+
 # Rules
 The game assumes Hasbro rules i.e. there is no restriction on ships touching each other and there is always player change after a move, regardless of the outcome of the last move.
 
