@@ -317,7 +317,7 @@ public class Player
                     lastMove = Tuple.Create(lastMove.Item1 - 1, lastMove.Item2);
                     if (lastMove.Item1 < 0 )
                     {
-                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
+                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Down; lastMove = firstHit = possibleFakeShips[0]; }
                         else
                         {
                             isDeadlocked = true;
@@ -330,7 +330,7 @@ public class Player
                     lastMove = Tuple.Create(lastMove.Item1 + 1, lastMove.Item2);
                     if (lastMove.Item1 > 9)
                     {
-                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
+                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Down; lastMove = firstHit = possibleFakeShips[0]; }
                         else
                         {
                             isDeadlocked = true;
@@ -466,7 +466,10 @@ public class Player
                 if (lastMove.Item2 > 1 && enemyBoard[lastMove.Item1, lastMove.Item2 - 1] == PointType.Unknown) possibleDirections.Add(Direction.Up);
                 if (lastMove.Item2 < 9 && enemyBoard[lastMove.Item1, lastMove.Item2 + 1] == PointType.Unknown) possibleDirections.Add(Direction.Down);
                 if (possibleDirections.Count == 0) UpdateKill(1);
-                currentBehaviour = CurrentBehaviour.Found;
+                else
+                {
+                    currentBehaviour = CurrentBehaviour.Found;
+                }
             }
             else if (currentBehaviour == CurrentBehaviour.Found)
             {
@@ -534,7 +537,7 @@ public class Player
                 switch (enemyBoard[j, i])
                 {
                     case PointType.Empty:
-                        Console.Write(".");
+                        Console.Write("E");
                         break;
                     case PointType.Ship:
                         Console.Write("O");
