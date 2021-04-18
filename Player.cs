@@ -317,32 +317,52 @@ public class Player
                     lastMove = Tuple.Create(lastMove.Item1 - 1, lastMove.Item2);
                     if (lastMove.Item1 < 0 )
                     {
-                        lastDirection = Direction.Right;
-                        lastMove = Tuple.Create(firstHit.Item1 + 1, firstHit.Item2);
+                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
+                        else
+                        {
+                            isDeadlocked = true;
+                            lastDirection = Direction.Right;
+                            lastMove = Tuple.Create(firstHit.Item1 + 1, firstHit.Item2);
+                        }
                     }
                     break;
                 case CurrentBehaviour.Right:
                     lastMove = Tuple.Create(lastMove.Item1 + 1, lastMove.Item2);
                     if (lastMove.Item1 > 9)
                     {
-                        lastDirection = Direction.Left;
-                        lastMove = Tuple.Create(firstHit.Item1 - 1, firstHit.Item2);
+                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
+                        else
+                        {
+                            isDeadlocked = true;
+                            lastDirection = Direction.Left;
+                            lastMove = Tuple.Create(firstHit.Item1 - 1, firstHit.Item2);
+                        }
                     }
                     break;
                 case CurrentBehaviour.Up:
                     lastMove = Tuple.Create(lastMove.Item1, lastMove.Item2 - 1);
                     if (lastMove.Item2 < 0)
                     {
-                        lastDirection = Direction.Down;
-                        lastMove = Tuple.Create(firstHit.Item1, firstHit.Item2 + 1);
+                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
+                        else
+                        {
+                            isDeadlocked = true;
+                            lastDirection = Direction.Down;
+                            lastMove = Tuple.Create(firstHit.Item1, firstHit.Item2 + 1);
+                        }
                     }
                     break;
                 case CurrentBehaviour.Down:
                     lastMove = Tuple.Create(lastMove.Item1, lastMove.Item2 + 1);
                     if (lastMove.Item2 > 9)
                     {
-                        lastDirection = Direction.Up;
-                        lastMove = Tuple.Create(firstHit.Item1, firstHit.Item2 - 1);
+                        if (isDeadlocked) { hasbroFixRequired = true; isDeadlocked = false; currentBehaviour = CurrentBehaviour.Right; lastMove = firstHit = possibleFakeShips[0]; }
+                        else
+                        {
+                            isDeadlocked = true;
+                            lastDirection = Direction.Up;
+                            lastMove = Tuple.Create(firstHit.Item1, firstHit.Item2 - 1);
+                        }
                     }
                     break;
             }
@@ -380,7 +400,7 @@ public class Player
     public Result GetHit(Tuple<int, int> pos)
     {
         if (playerBoard[pos.Item1, pos.Item2] == PointType.Empty) return Result.Miss;
-        if (playerBoard[pos.Item1, pos.Item2] == PointType.KilledShip) return Result.Kill;
+        if (playerBoard[pos.Item1, pos.Item2] == PointType.KilledShip) return Result.Miss;
         else return CheckKill(pos);
     }
 
@@ -441,10 +461,10 @@ public class Player
             {
                 firstHit = Tuple.Create(lastMove.Item1, lastMove.Item2);
                 possibleDirections.Clear();
-                if (lastMove.Item1 > 1) possibleDirections.Add(Direction.Left);
-                if (lastMove.Item1 < 9) possibleDirections.Add(Direction.Right);
-                if (lastMove.Item2 > 1) possibleDirections.Add(Direction.Up);
-                if (lastMove.Item2 < 9) possibleDirections.Add(Direction.Down);
+                if (lastMove.Item1 > 1 && enemyBoard[lastMove.Item1-1,lastMove.Item2] == PointType.Unknown) possibleDirections.Add(Direction.Left);
+                if (lastMove.Item1 < 9 && enemyBoard[lastMove.Item1 + 1, lastMove.Item2] == PointType.Unknown) possibleDirections.Add(Direction.Right);
+                if (lastMove.Item2 > 1 && enemyBoard[lastMove.Item1, lastMove.Item2 - 1] == PointType.Unknown) possibleDirections.Add(Direction.Up);
+                if (lastMove.Item2 < 9 && enemyBoard[lastMove.Item1, lastMove.Item2 + 1] == PointType.Unknown) possibleDirections.Add(Direction.Down);
                 if (possibleDirections.Count == 0) UpdateKill(1);
                 currentBehaviour = CurrentBehaviour.Found;
             }
@@ -473,6 +493,8 @@ public class Player
             }
             else
             {
+                isDeadlocked = false;
+                possibleFakeShips.Clear();
                 currentBehaviour = CurrentBehaviour.Searching;
             }
 
