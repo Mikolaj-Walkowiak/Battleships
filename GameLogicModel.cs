@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-public class GameLogicModel
+public class GameLogicModelHelper
 {	
 	public string DiagonalBoard { get; set; }
 	
@@ -9,4 +10,9 @@ public class GameLogicModel
 	public string RandomBoard { get; set; }
 
 	public string RandomBoardEnemy { get; set; }
+}
+
+public class GameLogicModel
+{
+	public List<GameLogicModelHelper> GameHistory { get; set; }
 }

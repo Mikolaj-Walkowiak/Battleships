@@ -19,9 +19,7 @@ namespace BattleshipGame.Controllers
         [HttpGet]
         public IEnumerable<GameLogicModel> Get()
         {
-            return Enumerable.Range(1, 1).Select(index => _GameLogicService.Move()
-            )
-            .ToArray();
+            yield return _GameLogicService.Move();
         }
     }
 }

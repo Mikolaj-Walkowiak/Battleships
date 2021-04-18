@@ -386,7 +386,7 @@ public class Player
     public Result GetHit(Tuple<int, int> pos)
     {
         if (playerBoard[pos.Item1, pos.Item2] == PointType.Empty) return Result.Miss;
-        if (playerBoard[pos.Item1, pos.Item2] == PointType.KilledShip) return Result.Miss;
+        if (playerBoard[pos.Item1, pos.Item2] == PointType.KilledShip) return Result.Hit;
         else return CheckKill(pos);
     }
     public void GetResult(Result result)

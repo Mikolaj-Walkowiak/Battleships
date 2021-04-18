@@ -20,23 +20,24 @@ export class FetchDataComponent {
       this.RandomBoard[i] = [];
       this.RandomBoardEnemy[i] = [];
       for (var j = 0; j < 10; ++j) {
-        this.DiagonalBoard[i][j] = this.gameState[history].diagonalBoard[i * 10 + j];
-        this.DiagonalBoardEnemy[i][j] = this.gameState[history].diagonalBoardEnemy[i * 10 + j];
-        this.RandomBoard[i][j] = this.gameState[history].randomBoard[i * 10 + j];
-        this.RandomBoardEnemy[i][j] = this.gameState[history].randomBoardEnemy[i * 10 + j];
+        this.DiagonalBoard[i][j] = this.gameState[0].gameHistory[history].diagonalBoard[i * 10 + j];
+        this.DiagonalBoardEnemy[i][j] = this.gameState[0].gameHistory[history].diagonalBoardEnemy[i * 10 + j];
+        this.RandomBoard[i][j] = this.gameState[0].gameHistory[history].randomBoard[i * 10 + j];
+        this.RandomBoardEnemy[i][j] = this.gameState[0].gameHistory[history].randomBoardEnemy[i * 10 + j];
       }
     }
-
   }
-  next() {
-    if (this.gameState.length < this.iterationCount) {
-      this.iterationCount = this.iterationCount + 1;
+  next(howMuch: number): void {
+    if (this.iterationCount + howMuch < this.gameState[0].gameHistory.length) {
+      this.DiagonalBoard[0][0] = "4";
+      this.iterationCount = this.iterationCount + howMuch;
       this.init(this.iterationCount);
     }
   }
-  back() {
-    if (this.iterationCount > 0) {
-      this.iterationCount = this.iterationCount + 1;
+
+  back(howMuch: number): void {
+    if (this.iterationCount -howMuch > 0) {
+      this.iterationCount = this.iterationCount - howMuch;
       this.init(this.iterationCount);
     }
   }
@@ -52,9 +53,13 @@ export class FetchDataComponent {
   }
 }
 
-interface GameLogicModel {
+interface GameLogicModelHelper {
   diagonalBoard: string;
   diagonalBoardEnemy: string;
   randomBoard: string;
   randomBoardEnemy: string;
+}
+
+interface GameLogicModel {
+  gameHistory: Array<GameLogicModelHelper>;
 }

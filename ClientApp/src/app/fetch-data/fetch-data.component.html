@@ -1,19 +1,14 @@
-<!--
-  <i class="bi bi-x"></i> miss
-  <i class="bi bi-x-circle"></i> hit
-  <i class="bi bi-x-circle-fill"></i> kill
-  <i class="bi bi-shield"></i> ship
-
-
-
-
--->
-
-
 <h1 id="tableLabel">Battleship Game</h1>
 <p *ngIf="!gameState"><em>Loading...</em></p>
+<div>
+  <button (click)="back(10)" [disabled]="iterationCount < 10" *ngIf="gameState">Back(10)</button>
+  <button (click)="back(1)" [disabled]="iterationCount == 0" *ngIf="gameState">Back</button>
+  <button (click)="next(1)" [disabled]="iterationCount == gameState[0].gameHistory.length-1"  *ngIf="gameState">Next</button>
+  <button (click)="next(10)" [disabled]="iterationCount > gameState[0].gameHistory.length-11"  *ngIf="gameState">Next(10)</button>
+  </div>
+Iteration: {{iterationCount}}
+
 <div><div align="left">DiagonalPlayer</div> <div align="right">RandomPlayer</div></div>
-<div><button (click)="back()" [disabled]="iterationCount == 0">Back</button><button align ="right" (click)="next()" [disabled]="iterationCount == gameState.length-1">Next</button></div>
 <div class="row">
   <table class='table table-striped col-md-6 border border-dark' aria-labelledby="tableLabel" *ngIf="gameState">
     <thead>

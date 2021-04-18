@@ -14,7 +14,7 @@ The game assumes Hasbro rules i.e. there is no restriction on ships touching eac
 
 # Frontend
 ![Page](https://github.com/Mikolaj-Walkowiak/Battleships/blob/main/screenshots/frontend.png?raw=true)
-The frontend is a simple Angular app made by using a part of the example project provided by Microsoft. There is a landing page describing the application and a simulation page where you can see the outcome of the battleship game played by the bots. There is currently no play history, although it is going to be added.
+The frontend is a simple Angular app made by using a part of the example project provided by Microsoft. There is a landing page describing the application and a simulation page where you can see the outcome of the battleship game played by the bots. After clicking on the Start Simulation button the game calls the backend of the application and gets the entire play history as a result. This history is used to populate HTML tables with bootstrap icons corresponding with the moves and their outcomes. The user is able to freely go back and forth through game history.
 
 # Backend
 There were a few design choices, mostly due to the Hasbro rules making thing difficult.
