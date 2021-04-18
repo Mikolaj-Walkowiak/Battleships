@@ -1,11 +1,11 @@
 # Battleships
 Battleships game with 2 bots playing with each other. Game logic is located in GameLogicService.cs along with Player.cs.
 
-# Rules
-The game assumes Hasbro rules i.e. there is no restriction on ships touching each other and there is always player change after a move, regardless of the outcome of the last move.
-
 # The task
 Based on the rules of the Battleship gameboard (https://en.wikipedia.org/wiki/Battleship_(game)) implement a program that randomly places ships on two boards and simulate the gameplay between 2 players.
+
+# Rules
+The game assumes Hasbro rules i.e. there is no restriction on ships touching each other and there is always player change after a move, regardless of the outcome of the last move.
 
 # Frontend
 ![Page](https://github.com/Mikolaj-Walkowiak/Battleships/blob/main/screenshots/frontend.png?raw=true)
