@@ -8,7 +8,7 @@ public enum PlayMode
     Diagonal // apparently going in a diagonal line when firing
              // is +ev for the battleship game
 }
-enum CurrentBehaviour : int
+public enum CurrentBehaviour : int
 {
     Searching = 0,
     Found = 1,
@@ -32,7 +32,7 @@ public enum PointType
     Ship,
     Unknown
 }
-enum Direction : int
+public enum Direction : int
 {
     Up = 2,
     Right = 3,
